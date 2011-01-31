@@ -10,35 +10,79 @@
 import java.awt.Point;
 
 void setup() { 
-  size(640, 480); 
+  size(800, 600); 
   frameRate(30);
 } 
  
 void draw() { 
+  //
+  // Variables to control output image
+  //
+  float[] colors        = {0, 0, 0, 128}, // R, G, B, Alpha (0 == full transparency)
+          colorDiffs    = {1, 1, 1, 0},
+          colorMin      = {128, 128, 128, 128},
+          colorMax      = {255, 255, 255, 128};
+  int     initialRadius = 50,
+          maxRadius     = 400,
+          incRadius     = 10;
+  int     numQuads = 3;  // # of "quadrants" - IE, groups of 4 circles, each offset 90 degrees
   background(255, 255, 255);
+  strokeWeight(1);
+  //
+  // End variables
+  //
 
   noFill();
-  for (int r = 50; r < 500; r += 50){
-    // TODO: change colors, make r's increment smaller
-    drawFlower( (float)r); 
+  // TODO: may get better results on inside if count starts from min and increases...
+  //       but there may be a problem with sheering, perhaps due to using ellipse()
+  //       instead of individual pixels
+//  for (int r = maxRadius; r >= initialRadius; r -= incRadius){
+  for (int r = initialRadius; r  < maxRadius; r += incRadius){    
+    drawFlower(numQuads, (float)r, colors, colorDiffs, colorMin, colorMax); 
   }
   
   noLoop();
 }
 
-void drawFlower(float radius)
+/**
+ * Ajust stroke color by applying differential values to the
+ * color array, and setting the new stroke color.
+ */
+void adjustColors(float[] colors, float[] diffs, float[] colorMin, float[] colorMax){
+  for(int i = 0; i < colors.length; i++){
+    colors[i] = colors[i] + diffs[i];
+    
+    if (colors[i] > colorMax[i]){
+      colors[i] = colorMax[i];
+      diffs[i] *= -1;
+    } else if (colors[i] < colorMin[i]){
+      colors[i] = colorMin[i];
+      diffs[i] *= -1;
+    } 
+  }
+ 
+  stroke(colors[0], colors[1], colors[2], colors[3]);
+}
+
+/**
+ *
+ */
+void drawFlower(int numQuads, float radius, float[] colors, float[] colorDiffs, float[] colorMin, float[] colorMax)
 {
-  strokeWeight(1);
-   float x = width/2, y = height/2;
+  float x = width/2, y = height/2;
   float angle = 0;
   
-  for (int quadAngle = 0; quadAngle < 360; quadAngle += 90/2) // / numQuads)
+  for (int quadAngle = 0; quadAngle < 360; quadAngle += 90 / numQuads)
   {  
+    adjustColors(colors, colorDiffs, colorMin, colorMax);
     Point p = pointOnCircle(angle + quadAngle, radius/2);
     ellipse(x + p.x, y + p.y, radius, radius);
   }  
 }
 
+/**
+ *
+ */
 public Point pointOnCircle(double degrees, double radius) // static
 {
   double x = (Math.cos(Math.toRadians(degrees)) * radius);
