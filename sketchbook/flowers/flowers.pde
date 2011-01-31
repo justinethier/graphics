@@ -9,30 +9,72 @@
 
 import java.awt.Point;
 
-void setup() { 
-  size(800, 600); 
-  frameRate(30);
-} 
+
+//
+// Variables to control output image
+//
  
-void draw() { 
-  //
-  // Variables to control output image
-  //
+  // Colors
   float[] colors        = {0, 0, 0, 128}, // R, G, B, Alpha (0 == full transparency)
           colorDiffs    = {1, 1, 1, 0},
-          colorMin      = {128, 128, 128, 128},
-          colorMax      = {255, 255, 255, 128};
+          colorMin      = {64, 128, 0, 255},
+          colorMax      = {255, 255, 0, 128};
+          
+  // Radius
   int     initialRadius = 50,
           maxRadius     = 400,
           incRadius     = 10;
-  int     numQuads = 3;  // # of "quadrants" - IE, groups of 4 circles, each offset 90 degrees
-  background(255, 255, 255);
-  strokeWeight(1);
-  //
-  // End variables
-  //
+          
+  // # of "quadrants" - IE, groups of 4 circles, each offset 90 degrees                    
+  int numQuads = 8;  
 
-  noFill();
+  int _strokeWeight = 1;
+//
+// End variables
+//
+
+
+/**
+ * Setup initial UI configuration
+ */
+void setup() { 
+  size(1024, 768); 
+  frameRate(30);
+  strokeWeight(_strokeWeight);
+  noFill();  
+} 
+
+/**
+ * Key pressed event, used for live interaction
+ */
+void keyPressed() {
+  if (keyCode == LEFT) 
+  {
+    if(numQuads > 1){ numQuads--; }
+    redraw();
+  }
+  else if (keyCode == RIGHT){
+    numQuads++;
+    redraw();    
+  }
+  else if (keyCode == UP){
+    incRadius -= 1;
+    if (incRadius < 0) incRadius = 1;
+    redraw();
+  }
+  else if (keyCode == DOWN){
+    incRadius += 1;
+    redraw();    
+  }
+  else if (keyCode == ENTER){
+    // TODO: save variables too
+    save("output.png");
+  }
+}
+ 
+void draw() { 
+  background(255, 255, 255); // Clear any previous output
+
   // TODO: may get better results on inside if count starts from min and increases...
   //       but there may be a problem with sheering, perhaps due to using ellipse()
   //       instead of individual pixels
