@@ -5,35 +5,40 @@
  *
  * Controls:
  *  
- * - Up key: increase radius of circles
- * - Down key: decrease radius of circles
+ * - Up key: increase number of of circle "rings"
+ * - Down key: decrease number of of circle "rings"
+ *
+ * - Page Up key: increase radius of circles in outer "rings"
+ * - Page Down key: decrease radius of circles in outer "rings" 
+ *
  * - Left key: decrease number of circles
  * - Right key: increase number of circles
+ *
  * - Enter key: save current output to PNG
  * - Mouse button click: toggle animation
  * 
  *
  * @author Justin Ethier
  *
- Copyright (c) 2011 Justin Ethier
-
- Permission is hereby granted, free of charge, to any person obtaining a copy
- of this software and associated documentation files (the "Software"), to deal
- in the Software without restriction, including without limitation the rights
- to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- copies of the Software, and to permit persons to whom the Software is
- furnished to do so, subject to the following conditions:
- 
- The above copyright notice and this permission notice shall be included in
- all copies or substantial portions of the Software.
- 
- THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- THE SOFTWARE.
+ * Copyright (c) 2011 Justin Ethier
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
  */
 
 import java.awt.Point;
@@ -49,10 +54,13 @@ import java.awt.Point;
           colorMin      = {64, 128, 0, 255},
           colorMax      = {255, 255, 0, 128};
           
-  // Radius
+  // Radius of each individual circle
+  // TODO: would be nice if this could somehow expand to fit the available space of the page.
   int     initialRadius = 50,
-          maxRadius     = 400,
           incRadius     = 10;
+  
+  // # of "rings" of circles
+  int numRings = 25;
           
   // # of "quadrants" - IE, groups of 4 circles, each offset 90 degrees                    
   int numQuads = 8;  
@@ -91,14 +99,23 @@ void keyPressed() {
     numQuads++;
     redraw();    
   }
-  else if (keyCode == UP){
+  else if (keyCode == KeyEvent.VK_PAGE_UP){
+    incRadius += 1;    
+    redraw();    
+  }
+  else if (keyCode == KeyEvent.VK_PAGE_DOWN){
     incRadius -= 1;
     if (incRadius < 0) incRadius = 1;
     redraw();
+  }  
+  else if (keyCode == UP){
+    numRings += 1;    
+    redraw();    
   }
   else if (keyCode == DOWN){
-    incRadius += 1;
-    redraw();    
+    numRings -= 1;
+    if (numRings < 0) numRings = 1;
+    redraw();
   }
   else if (keyCode == ENTER){
     // TODO: save variables too
@@ -128,8 +145,13 @@ void draw() {
   //       but there may be a problem with sheering, perhaps due to using ellipse()
   //       instead of individual pixels
 //  for (int r = maxRadius; r >= initialRadius; r -= incRadius){
-  for (int r = initialRadius; r  < maxRadius; r += incRadius){    
+  
+  int r = initialRadius;
+  for (int rings = 0; rings < numRings; rings++){
+//  for (int r = initialRadius; r  < maxRadius; r += incRadius){    
+  
     drawFlower(numQuads, (float)r, colors, colorDiffs, colorMin, colorMax); 
+    r += incRadius;
   }
   
 //  noLoop();
