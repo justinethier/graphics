@@ -3,13 +3,37 @@
  *
  * Written in processing, see: http://processing.org
  *
- * TODO: list of controls here (up arrow, etc)
- * TODO: try animation (w/pause capabilty), effect would be colors constantly changing. 
- *            but may be too slow, unless there is a way to optimize the drawing algorithm.
+ * Controls:
+ *  
+ * - Up key: increase radius of circles
+ * - Down key: decrease radius of circles
+ * - Left key: decrease number of circles
+ * - Right key: increase number of circles
+ * - Enter key: save current output to PNG
+ * - Mouse button click: toggle animation
+ * 
  *
  * @author Justin Ethier
  *
-* TODO: MIT license
+ Copyright (c) 2011 Justin Ethier
+
+ Permission is hereby granted, free of charge, to any person obtaining a copy
+ of this software and associated documentation files (the "Software"), to deal
+ in the Software without restriction, including without limitation the rights
+ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ copies of the Software, and to permit persons to whom the Software is
+ furnished to do so, subject to the following conditions:
+ 
+ The above copyright notice and this permission notice shall be included in
+ all copies or substantial portions of the Software.
+ 
+ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ THE SOFTWARE.
  */
 
 import java.awt.Point;
@@ -34,6 +58,9 @@ import java.awt.Point;
   int numQuads = 8;  
 
   int _strokeWeight = 1;
+  int _frameRate = 15;
+  
+  boolean animating = true;
 //
 // End variables
 //
@@ -44,9 +71,11 @@ import java.awt.Point;
  */
 void setup() { 
   size(1024, 768); 
-  frameRate(30);
+  frameRate(_frameRate);
   strokeWeight(_strokeWeight);
   noFill();  
+  
+  if (!animating) noLoop();
 } 
 
 /**
@@ -76,6 +105,21 @@ void keyPressed() {
     save("output.png");
   }
 }
+
+/**
+ * Mouse pressed event handler
+ */
+void mousePressed() {
+  if (animating){
+    noLoop();
+    redraw();  
+  } else {
+    loop();  
+  }
+  
+  animating = !animating;
+}
+
  
 void draw() { 
   background(255, 255, 255); // Clear any previous output
@@ -88,7 +132,7 @@ void draw() {
     drawFlower(numQuads, (float)r, colors, colorDiffs, colorMin, colorMax); 
   }
   
-  noLoop();
+//  noLoop();
 }
 
 /**
