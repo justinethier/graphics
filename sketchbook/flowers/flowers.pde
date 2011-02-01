@@ -3,8 +3,13 @@
  *
  * Written in processing, see: http://processing.org
  *
+ * TODO: list of controls here (up arrow, etc)
+ * TODO: try animation (w/pause capabilty), effect would be colors constantly changing. 
+ *            but may be too slow, unless there is a way to optimize the drawing algorithm.
+ *
  * @author Justin Ethier
  *
+* TODO: MIT license
  */
 
 import java.awt.Point;
