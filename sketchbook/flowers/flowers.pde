@@ -48,6 +48,8 @@ import java.awt.Point;
 // Variables to control output image
 //
  
+ // TODO: some method of dynamically changing color.
+ // may consider simplifying this color scheme as part of that
   // Colors
   float[] colors        = {0, 0, 0, 128}, // R, G, B, Alpha (0 == full transparency)
           colorDiffs    = {1, 1, 1, 0},
