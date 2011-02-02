@@ -60,7 +60,7 @@ import java.awt.Point;
           incRadius     = 10;
   
   // # of "rings" of circles
-  int numRings = 25;
+  int numRings = 35;
           
   // # of "quadrants" - IE, groups of 4 circles, each offset 90 degrees                    
   int numQuads = 8;  
@@ -69,6 +69,7 @@ import java.awt.Point;
   int _frameRate = 15;
   
   boolean animating = true;
+  int output_num = 0;
 //
 // End variables
 //
@@ -118,8 +119,23 @@ void keyPressed() {
     redraw();
   }
   else if (keyCode == ENTER){
-    // TODO: save variables too
-    save("output.png");
+    // Take a snapshot, and save settings to file as well
+    String[] vars = {
+      Arrays.toString(colors),
+      Arrays.toString(colorDiffs),
+      Arrays.toString(colorMin),
+      Arrays.toString(colorMax),
+      "" + initialRadius,
+      "" + incRadius,
+      "" + numRings,
+      "" + numQuads,      
+      "" + _strokeWeight,
+      "" + _frameRate,
+      "" + animating
+    };
+
+    saveStrings("output-vars-" + String.format("%04d", output_num) + ".txt", vars);    
+    save("output-" + String.format("%04d", output_num++) + ".png");
   }
 }
 
