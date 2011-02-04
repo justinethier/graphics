@@ -157,6 +157,10 @@ void mousePressed() {
 
  
 void draw() { 
+  //
+  // TODO: use an off-screen buffer for rendering.
+  //       see: http://processing.org/reference/PGraphics.html
+  //
   background(255, 255, 255); // Clear any previous output
 
   // TODO: may get better results on inside if count starts from min and increases...
