@@ -1,0 +1,4 @@
+TODO: take a set of images using 4 circles, 8, 12, etc and place them in sequence in a single
+      master image. would be nice to post on main page.
+
+TODO: change flower colors such that the default set can be changed to toggle through a few known ones....
